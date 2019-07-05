@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <constant name="struts.allowed.action.names" value="[a-zA-Z0-9._!/\-*]*"></constant>
+    <package name="EmployeeManager" namespace="/" extends="struts-default">
+    <!-- 1声明拦截器 -->
+    <interceptors>
+        <interceptor name="logininterceptor" class="ncu.ies.employee.interceptor.LoginInterceptor"></interceptor>
+        <!-- 自定义一个拦截器栈
+        <interceptor-stack name="myStack">
+            <interceptor-ref name="defaultStack"></interceptor-ref>
+            <interceptor-ref name="logininterceptor">
+                <param name="excludeMethods">login</param>
+            </interceptor-ref>
+        </interceptor-stack>-->
+    </interceptors>
+    <!-- 用户登录 -->
+    <action name="login" class="UserAction" method="login">
+        <!-- 2使用自定义拦截器 -->
+         <interceptor-ref name="logininterceptor">
+             <!--使用自定义拦截器时会拦截所有方法，在这配置action中的某些方法不进行拦截
+                 name属性值：excludeMethods-->
+
+            <param name="excludeMethods">login</param>
+        </interceptor-ref>
+        <!-- 3把默认拦截器手动使用一次-->
+        <interceptor-ref name="defaultStack"></interceptor-ref>
+
+        <!-- 登录成功 -->
+        <result name="loginsuccess">/jsp/main.jsp</result>
+        <!-- 登录失败 -->
+        <result name="loginfail">/index.jsp</result>
+
+    </action>
+    <!--用户修改密码-->
+    <action name="user_updatePasswordPage" class="UserAction" method="updatePasswordPage">
+        <result name="updatePasswordPage">/jsp/updatePassword.jsp</result>
+    </action>
+    <action name="user_updatePassword" class="UserAction" method="updatePassword">
+        <result name="updatePassword" type="redirect">/index.jsp</result>
+    </action>
+
+    <!-- Emp -->
+    <action name="employee_findAll" class="EmployeeAction" method="findAll">
+        <!-- 显示查询的员工信息 -->
+        <result name="findAll">/jsp/emplist.jsp</result>
+    </action>
+    <action name="employee_searchPage" class="EmployeeAction" method="searchPage">
+        <!-- 显示查询的员工信息 -->
+        <result name="searchPage">/jsp/searchPage.jsp</result>
+    </action>
+    <action name="employee_findByUsername" class="EmployeeAction" method="findByUsername">
+        <!-- 显示查询的员工信息 -->
+        <result name="findByUsername">/jsp/emp.jsp</result>
+    </action>
+    <action name="employee_addPage" class="EmployeeAction" method="addPage">
+        <!-- 显示添加后的员工信息 -->
+        <result name="addPage">/jsp/addPage.jsp</result>
+    </action>
+        <action name="employee_add" class="EmployeeAction" method="add">
+            <!-- 显示添加后的员工信息 -->
+            <result name="add" type="redirect">employee_findAll.action</result>
+        </action>
+    <action name="employee_updatePage" class="EmployeeAction" method="updatePage">
+        <!-- 显示修改后的员工信息 -->
+        <result name="updatePage">/jsp/updatePage.jsp</result>
+    </action>
+        <action name="employee_update" class="EmployeeAction" method="update">
+            <!-- 显示修改后的员工信息 -->
+            <result name="update" type="redirect">employee_findAll.action</result>
+        </action>
+    <action name="employee_delete" class="EmployeeAction" method="delete">
+        <!-- 显示删除后的员工信息 -->
+        <result name="delete" type="redirect">employee_findAll.action</result>
+    </action>
+    </package>
+</struts>
